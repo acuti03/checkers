@@ -1,5 +1,4 @@
-#include "headers.h"
-//#include "conio.h"
+#include "functions.c"
 
 
 int main(){
@@ -8,6 +7,7 @@ int main(){
     int player;
     int a;
 
+    system("clear");
     createPlayGround(&playGround);
     printPlayGround(&playGround);
     printInsertBox();
