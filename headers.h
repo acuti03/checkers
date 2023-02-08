@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "conio.h"
+#include <string.h>
+#include <ncurses.h>
 
 
 /*
@@ -11,17 +12,18 @@
 */
 
 
-#define RIG 8
+#define ROW 8
 #define COL 8
 
+
 typedef struct{
-    int colour;
+    char colour;
     char checker;
     int isPawn;
 } Box;
 
 typedef struct{
-    Box playGround[RIG][COL];
+    Box playGround[ROW][COL];
 } PlayGround;
 
 typedef enum{
@@ -33,4 +35,8 @@ typedef enum{
 
 void createPlayGround(PlayGround *p);
 void printPlayGround(PlayGround *p);
-void printInsertBox();
+char playerSelector(int a);
+void display(PlayGround *p, char player);
+int eatCheck(PlayGround *p, int *rowS, int *colS, int *rowF, int *colF, char player);
+void inputBox(int *rowS, int *colS, int *rowF, int *colF, char player, PlayGround *p);
+void makeMove(int rowS, int colS, int rowF, int colF, PlayGround *p);
