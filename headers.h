@@ -16,16 +16,6 @@
 #define COL 8
 
 
-typedef struct{
-    char colour;
-    char checker;
-    int isPawn;
-} Box;
-
-typedef struct{
-    Box playGround[ROW][COL];
-} PlayGround;
-
 typedef enum{
     Win,
     InProgress,
@@ -33,10 +23,32 @@ typedef enum{
 } Status;
 
 
+typedef struct{
+    char colour;
+    Status status;
+} Player;
+
+
+typedef struct{
+    char colour;
+    char checker;
+    int isPawn;
+} Box;
+
+
+typedef struct{
+    Box playGround[ROW][COL];
+} PlayGround;
+
+
 void createPlayGround(PlayGround *p);
 void printPlayGround(PlayGround *p);
 char playerSelector(int a);
 void display(PlayGround *p, char player);
-int eatCheck(PlayGround *p, int *rowS, int *colS, int *rowF, int *colF, char player);
-void inputBox(int *rowS, int *colS, int *rowF, int *colF, char player, PlayGround *p);
+bool eatCheck(PlayGround *p, int *rowS, int *colS, int *rowF, int *colF, char player);
+void inputBox(int *rowS, int *colS, int *rowF, int *colF, Player *player, PlayGround *p);
 void makeMove(int rowS, int colS, int rowF, int colF, PlayGround *p);
+void interrupt(Player *p);
+Status updateStatus(PlayGround *p, Player *player);
+void printMessage(Player player);
+bool canMove(PlayGround *p, Player *player);
