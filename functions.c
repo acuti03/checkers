@@ -40,8 +40,8 @@ void createPlayGround(PlayGround *p){
 					p->playGround[i][j].checker = 0;
 				}
 			}
+			p->playGround[i][j].isPawn = false;
         }
-		p->playGround[i][j].isPawn = 0;
     }
 }
 
@@ -115,17 +115,31 @@ void printPlayGround(PlayGround *p){
 		attroff(COLOR_PAIR(1));
 		for(j = 0; j < COL; j++){
 			if(p->playGround[i][j].colour == 'B' && p->playGround[i][j].checker == 'B'){
-				attron(COLOR_PAIR(2));
-				addstr("[ B ]");
-				attroff(COLOR_PAIR(2));
+				if(p->playGround[i][j].isPawn == false){
+					attron(COLOR_PAIR(2));
+					addstr("[ B ]");
+					attroff(COLOR_PAIR(2));
+				}
+				else{
+					attron(COLOR_PAIR(2));
+					addstr("[B B]");
+					attroff(COLOR_PAIR(2));
+				}
 			}
 			if(p->playGround[i][j].colour == 'B' && p->playGround[i][j].checker == 0){
 				addstr("[///]");
 			}
 			if(p->playGround[i][j].colour == 'B' && p->playGround[i][j].checker == 'W'){
-				attron(COLOR_PAIR(3));
-				addstr("[ W ]");
-				attroff(COLOR_PAIR(3));
+				if(p->playGround[i][j].isPawn == false){
+					attron(COLOR_PAIR(3));
+					addstr("[ W ]");
+					attroff(COLOR_PAIR(3));
+				}
+				else{
+					attron(COLOR_PAIR(3));
+					addstr("[W W]");
+					attroff(COLOR_PAIR(3));
+				}
 			}
 			if(p->playGround[i][j].colour == 'W' && p->playGround[i][j].checker == 0){
 				addstr("[   ]");
@@ -145,15 +159,34 @@ bool eatCheck(PlayGround *p, int *rowS, int *colS, int *rowF, int *colF, char pl
 	if(player == 'B'){
 		for(i = 0; i < ROW; i++){
 			for(j = 0; j < COL; j++){
-				if((p->playGround[i][j].checker == 'B') &&
-				((p->playGround[i+1][j+1].checker == 'W' && p->playGround[i+2][j+2].checker == 0) && (j + 2 <= 7) ||
-				(p->playGround[i+1][j-1].checker == 'W' && p->playGround[i+2][j-2].checker == 0) && (j - 2 >= 0))){
-					*rowS = i;
-					*colS = j;
-					*rowF = i + 2;
-					(p->playGround[i+1][j+1].checker == 'W') ? (*colF = j + 2) : (*colF = j - 2);
-					(p->playGround[i+1][j+1].checker == 'W') ? (p->playGround[i+1][j+1].checker = 0) : (p->playGround[i+1][j-1].checker = 0);
-					return TRUE;
+				if(p->playGround[i][j].isPawn == false){
+					if((p->playGround[i][j].checker == 'B') &&
+					((p->playGround[i+1][j+1].checker == 'W' && p->playGround[i+2][j+2].checker == 0 && p->playGround[i+1][j+1].isPawn == false) && (j + 2 <= 7) && (i + 2 <= 7) ||
+					(p->playGround[i+1][j-1].checker == 'W' && p->playGround[i+2][j-2].checker == 0 && p->playGround[i+1][j-1].isPawn == false) && (j - 2 >= 0) && (i + 2 <= 7))){
+						
+						*rowS = i;
+						*colS = j;
+						*rowF = i + 2;
+						(p->playGround[i+1][j+1].checker == 'W') ? (*colF = j + 2) : (*colF = j - 2);
+						(p->playGround[i+1][j+1].checker == 'W') ? (p->playGround[i+1][j+1].checker = 0) : (p->playGround[i+1][j-1].checker = 0);
+						return true;
+					}
+				}
+				else{
+					if((p->playGround[i][j].checker == 'B') &&
+					(((p->playGround[i+1][j+1].checker == 'W' && p->playGround[i+2][j+2].checker == 0) && (j + 2 <= 7) && (i + 2 <= 7)) ||
+					((p->playGround[i+1][j-1].checker == 'W' && p->playGround[i+2][j-2].checker == 0) && (j - 2 >= 0) && (i + 2 <= 7)) ||
+					((p->playGround[i-1][j+1].checker == 'W' && p->playGround[i-2][j+2].checker == 0) && (j + 2 >= 0) && (i - 2 <= 7)) ||
+					((p->playGround[i-1][j-1].checker == 'W' && p->playGround[i-1][j-2].checker == 0) && (j - 2 >= 0) && (i - 2 <= 7)))){
+
+						*rowS = i;
+						*colS = j;
+						if(p->playGround[i+1][j+1].checker == 'W'){ *rowF = i + 2; *colF = j + 2; p->playGround[i+1][j+1].checker = 0; }
+						else if(p->playGround[i+1][j-1].checker == 'W'){ *rowF = i + 2; *colF = j - 2; p->playGround[i+1][j-1].checker = 0; }
+						else if(p->playGround[i-1][j+1].checker == 'W'){ *rowF = i - 2; *colF = j + 2; p->playGround[i-1][j+1].checker = 0; }
+						else { *rowF = i - 2; *colF = j - 2; p->playGround[i-1][j-1].checker = 0; }
+						return true;
+					}
 				}
 			}
 		}
@@ -162,21 +195,40 @@ bool eatCheck(PlayGround *p, int *rowS, int *colS, int *rowF, int *colF, char pl
 	else{
 		for(i = ROW - 1; i >= 0; i--){
 			for(j = 0; j < COL; j++){
-				if((p->playGround[i][j].checker == 'W') &&
-				((p->playGround[i-1][j+1].checker == 'B' && p->playGround[i-2][j+2].checker == 0) && (j + 2 <= 7) ||
-				(p->playGround[i-1][j-1].checker == 'B' && p->playGround[i-2][j-2].checker == 0 ) && (j - 2 >= 0))){
-					*rowS = i;
-					*colS = j;
-					*rowF = i - 2;
-					(p->playGround[i-1][j+1].checker == 'B') ? (*colF = j + 2) : (*colF = j - 2);
-					(p->playGround[i-1][j+1].checker == 'B') ? (p->playGround[i-1][j+1].checker = 0) : (p->playGround[i-1][j-1].checker = 0);
-					return TRUE;
+				if(p->playGround[i][j].isPawn == false){
+					if((p->playGround[i][j].checker == 'W') &&
+					((p->playGround[i-1][j+1].checker == 'B' && p->playGround[i-2][j+2].checker == 0 && p->playGround[i-1][j+1].isPawn == false) && (j + 2 <= 7) && (i - 2 >= 0) ||
+					(p->playGround[i-1][j-1].checker == 'B' && p->playGround[i-2][j-2].checker == 0 && p->playGround[i-1][j-1].isPawn == false) && (j - 2 >= 0) && (i - 2 >= 0))){
+
+						*rowS = i;
+						*colS = j;
+						*rowF = i - 2;
+						(p->playGround[i-1][j+1].checker == 'B') ? (*colF = j + 2) : (*colF = j - 2);
+						(p->playGround[i-1][j+1].checker == 'B') ? (p->playGround[i-1][j+1].checker = 0) : (p->playGround[i-1][j-1].checker = 0);
+						return true;
+					}
+				}
+				else{
+					if((p->playGround[i][j].checker == 'W') &&
+					(((p->playGround[i+1][j+1].checker == 'B' && p->playGround[i+2][j+2].checker == 0) && (j + 2 <= 7) && (i + 2 <= 7)) ||
+					((p->playGround[i+1][j-1].checker == 'B' && p->playGround[i+2][j-2].checker == 0) && (j - 2 >= 0) && (i + 2 <= 7)) ||
+					((p->playGround[i-1][j+1].checker == 'B' && p->playGround[i-2][j+2].checker == 0) && (j + 2 >= 0) && (i - 2 <= 7)) ||
+					((p->playGround[i-1][j-1].checker == 'B' && p->playGround[i-1][j-2].checker == 0) && (j - 2 >= 0) && (i - 2 <= 7)))){
+
+						*rowS = i;
+						*colS = j;
+						if(p->playGround[i+1][j+1].checker == 'B'){ *rowF = i + 2; *colF = j + 2; p->playGround[i+1][j+1].checker = 0; }
+						else if(p->playGround[i+1][j-1].checker == 'B'){ *rowF = i + 2; *colF = j - 2; p->playGround[i+1][j-1].checker = 0; }
+						else if(p->playGround[i-1][j+1].checker == 'B'){ *rowF = i - 2; *colF = j + 2; p->playGround[i-1][j+1].checker = 0; }
+						else { *rowF = i - 2; *colF = j - 2; p->playGround[i-1][j-1].checker = 0; }
+						return true;
+					}
 				}
 			}
 		}
 	}
 
-	return FALSE;
+	return false;
 }
 
 
@@ -226,13 +278,25 @@ void inputBox(int *rowS, int *colS, int *rowF, int *colF, Player *player, PlayGr
 		addstr("Select the box (Y): ");
 		scanw("%d", colF);
 
-		if((p->playGround[*rowS][*colS].checker != 'B') ||
-		(p->playGround[*rowF][*colF].checker != 0) || (p->playGround[*rowF][*colF].colour != 'B') || 
-		((*colS != (*colF + 1) && *colS != (*colF - 1)))){
-			clear();
-			printPlayGround(p);
-			display(p, player->colour);
-			inputBox(rowS, colS, rowF, colF, player, p);
+		if(p->playGround[*rowS][*colS].isPawn == false){
+			if((p->playGround[*rowS][*colS].checker != 'B') ||
+			(p->playGround[*rowF][*colF].checker != 0) || (p->playGround[*rowF][*colF].colour != 'B') || 
+			(*colS != *colF + 1 && *colS != *colF - 1) || (*rowS != *rowF - 1)){
+				clear();
+				printPlayGround(p);
+				display(p, player->colour);
+				inputBox(rowS, colS, rowF, colF, player, p);
+			}
+		}
+		else{
+			if((p->playGround[*rowS][*colS].checker != 'B') ||
+			(p->playGround[*rowF][*colF].checker != 0) || (p->playGround[*rowF][*colF].colour != 'B') ||
+			(*colS != *colF + 1 && *colS != *colF - 1) || (*rowS != *rowF - 1 && *rowS != *rowF + 1)){
+				clear();
+				printPlayGround(p);
+				display(p, player->colour);
+				inputBox(rowS, colS, rowF, colF, player, p);
+			}
 		}
 	}
 	else{
@@ -250,13 +314,25 @@ void inputBox(int *rowS, int *colS, int *rowF, int *colF, Player *player, PlayGr
 		addstr("Select the box (Y): ");
 		scanw("%d", colF);
 
-		if((p->playGround[*rowS][*colS].checker != 'W') ||
-		(p->playGround[*rowF][*colF].checker != 0) || (p->playGround[*rowF][*colF].colour != 'B') || 
-		((*colS != (*colF + 1) && *colS != (*colF - 1)))){
-			clear();
-			printPlayGround(p);
-			display(p, player->colour);
-			inputBox(rowS, colS, rowF, colF, player, p);
+		if(p->playGround[*rowS][*colS].isPawn == false){
+			if((p->playGround[*rowS][*colS].checker != 'W') ||
+			(p->playGround[*rowF][*colF].checker != 0) || (p->playGround[*rowF][*colF].colour != 'B') || 
+			(*colS != *colF + 1 && *colS != *colF - 1) || (*rowS != *rowF + 1)){
+				clear();
+				printPlayGround(p);
+				display(p, player->colour);
+				inputBox(rowS, colS, rowF, colF, player, p);
+			}
+		}
+		else{
+			if((p->playGround[*rowS][*colS].checker != 'W') ||
+			(p->playGround[*rowF][*colF].checker != 0) || (p->playGround[*rowF][*colF].colour != 'B') ||
+			(*colS != *colF + 1 && *colS != *colF - 1) || (*rowS != *rowF - 1 && *rowS != *rowF + 1)){
+				clear();
+				printPlayGround(p);
+				display(p, player->colour);
+				inputBox(rowS, colS, rowF, colF, player, p);
+			}
 		}
 	}
 }
@@ -312,7 +388,7 @@ bool canMove(PlayGround *p, Player *player){
 				if(p->playGround[i][j].checker == 'W' &&
 				((p->playGround[i+1][j+1].checker == 0 && j + 1 <= 7) ||
 				(p->playGround[i+1][j-1].checker == 0 && j - 1 >= 0))){
-					return TRUE;
+					return true;
 				}
 			}
 		}
@@ -322,13 +398,34 @@ bool canMove(PlayGround *p, Player *player){
 			for(j = 0; j < COL; j++){
 				if(p->playGround[i][j].checker == 'B' &&
 				((p->playGround[i-1][j+1].checker == 0 && j + 1 <= 7) ||
-				(p->playGround[i-1][j-1].checker == 0 && j - 1 >= 0)))
-				return TRUE;
+				(p->playGround[i-1][j-1].checker == 0 && j - 1 >= 0))){
+					return true;
+				}
 			}
 		}
 	}
 
-	return FALSE;
+	return false;
+}
+
+
+void pawn(PlayGround *p, Player *player){
+	int i, j;
+
+	if(player->colour == 'W'){
+		for(i = 0, j = 0; j < COL; j++){
+			if(p->playGround[i][j].checker == 'W'){
+				p->playGround[i][j].isPawn = true;
+			}
+		}
+	}
+	else{
+		for(i = 7, j = 0; j < COL; j++){
+			if(p->playGround[i][j].checker == 'B'){
+				p->playGround[i][j].isPawn = true;
+			}
+		}
+	}
 }
 
 

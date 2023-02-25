@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ncurses.h>
+#include <stdbool.h>
 
 
 /*
@@ -32,7 +33,7 @@ typedef struct{
 typedef struct{
     char colour;
     char checker;
-    int isPawn;
+    bool isPawn;
 } Box;
 
 
@@ -43,6 +44,7 @@ typedef struct{
 
 void createPlayGround(PlayGround *p);
 void printPlayGround(PlayGround *p);
+void printLine();
 char playerSelector(int a);
 void display(PlayGround *p, char player);
 bool eatCheck(PlayGround *p, int *rowS, int *colS, int *rowF, int *colF, char player);
@@ -52,3 +54,4 @@ void interrupt(Player *p);
 Status updateStatus(PlayGround *p, Player *player);
 void printMessage(Player player);
 bool canMove(PlayGround *p, Player *player);
+void pawn(PlayGround *p, Player *player);

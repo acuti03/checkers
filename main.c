@@ -1,4 +1,4 @@
-#include "functions.c"
+#include "headers.h"
 
 
 int main(){
@@ -38,6 +38,9 @@ int main(){
         else{
             player.status = Lose;
         }
+
+//      se puo diventare un damone
+        pawn(&playGround, &player);
 
 //      possibilita di interrompere
         interrupt(&player);
