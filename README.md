@@ -5,4 +5,9 @@
 
 # How to run the game
 
-`cd dekstop`
+``` bash
+git clone https://github.com/acuti03/checkers.git
+cd checkers
+make
+./game
+```
