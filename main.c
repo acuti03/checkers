@@ -22,29 +22,29 @@ int main(){
         printPlayGround(&playGround);
         display(&playGround, player.colour);
 
-//      se puo mangiare
+//      if it can eat
         if(eatCheck(&playGround, &rowS, &colS, &rowF, &colF, player.colour)){
             makeMove(rowS, colS, rowF, colF, &playGround);
             printLine();
             mvprintw(22, 15, "you can eat from X: %d Y: %d to X: %d Y: %d", rowS, colS, rowF, colF);
             getch();
         }
-//      se puo mouversi
+//      if it can move
         else if(canMove(&playGround, &player)){
             inputBox(&rowS, &colS, &rowF, &colF, &player, &playGround);
             makeMove(rowS, colS, rowF, colF, &playGround);
         }
-//      se non puo fare entrambi hai perso
+//      if it cannot do both it has lost
         else{
             player.status = Lose;
         }
 
-//      se puo diventare un damone
+//      if it can become a pawn
         pawn(&playGround, &player);
 
-//      possibilita di interrompere
+//      possibility of interrupting
         interrupt(&player);
-//      vede se per caso hai vinto o perso
+//      see if you have won, lost or if the game should continue
 	    player.status = updateStatus(&playGround, &player);
 
         refresh();

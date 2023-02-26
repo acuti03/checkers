@@ -385,10 +385,21 @@ bool canMove(PlayGround *p, Player *player){
 	if(player->colour == 'W'){
 		for(i = 0; i < ROW; i++){
 			for(j = 0; j < COL; j++){
-				if(p->playGround[i][j].checker == 'W' &&
-				((p->playGround[i+1][j+1].checker == 0 && j + 1 <= 7) ||
-				(p->playGround[i+1][j-1].checker == 0 && j - 1 >= 0))){
-					return true;
+				if(p->playGround[i][j].isPawn == false){
+					if(p->playGround[i][j].checker == 'B' &&
+					((p->playGround[i+1][j+1].checker == 0 && (j + 1 <= 7) && (i + 1 <= 7)) ||
+					(p->playGround[i+1][j-1].checker == 0 && (j - 1 >= 0) && (i + 1 <= 7)))){
+						return true;
+					}
+				}
+				else{
+					if(p->playGround[i][j].checker == 'B' &&
+					((p->playGround[i-1][j+1].checker == 0 && (j + 1 <= 7) && (i - 1 >= 0)) ||
+					(p->playGround[i-1][j-1].checker == 0 && (j - 1 >= 0) && (i - 1 >= 0)) ||
+					(p->playGround[i+1][j+1].checker == 0 && (j + 1 <= 7) && (i + 1 <= 7)) ||
+					(p->playGround[i+1][j+1].checker == 0 && (j + 1 <= 7) && (i + 1 <= 7)))){
+						return true;
+					}
 				}
 			}
 		}
@@ -396,10 +407,21 @@ bool canMove(PlayGround *p, Player *player){
 	else{
 		for(i = ROW - 1; i >= 0; i--){
 			for(j = 0; j < COL; j++){
-				if(p->playGround[i][j].checker == 'B' &&
-				((p->playGround[i-1][j+1].checker == 0 && j + 1 <= 7) ||
-				(p->playGround[i-1][j-1].checker == 0 && j - 1 >= 0))){
-					return true;
+				if(p->playGround[i][j].isPawn == false){
+					if(p->playGround[i][j].checker == 'W' &&
+					((p->playGround[i-1][j+1].checker == 0 && (j + 1 <= 7) && (i - 1 >= 0)) ||
+					(p->playGround[i-1][j-1].checker == 0 && (j - 1 >= 0) && (i - 1 >= 0)))){
+						return true;
+					}
+				}
+				else{
+					if(p->playGround[i][j].checker == 'W' &&
+					((p->playGround[i-1][j+1].checker == 0 && (j + 1 <= 7) && (i - 1 >= 0)) ||
+					(p->playGround[i-1][j-1].checker == 0 && (j - 1 >= 0) && (i - 1 >= 0)) ||
+					(p->playGround[i+1][j+1].checker == 0 && (j + 1 <= 7) && (i + 1 <= 7)) ||
+					(p->playGround[i+1][j+1].checker == 0 && (j + 1 <= 7) && (i + 1 <= 7)))){
+						return true;
+					}
 				}
 			}
 		}
