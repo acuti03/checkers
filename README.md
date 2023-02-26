@@ -4,3 +4,5 @@
 
 
 # How to run the game
+
+`cd dekstop`
