@@ -1,3 +1,6 @@
-# checkers
+# Checkers
 
 ![alt text](game.png)
+
+
+# How to run the game
