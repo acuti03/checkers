@@ -382,7 +382,7 @@ Status updateStatus(PlayGround *p, Player *player){
 bool canMove(PlayGround *p, Player *player){
 	int i, j;
 
-	if(player->colour == 'W'){
+	if(player->colour == 'B'){
 		for(i = 0; i < ROW; i++){
 			for(j = 0; j < COL; j++){
 				if(p->playGround[i][j].isPawn == false){
@@ -397,7 +397,7 @@ bool canMove(PlayGround *p, Player *player){
 					((p->playGround[i-1][j+1].checker == 0 && (j + 1 <= 7) && (i - 1 >= 0)) ||
 					(p->playGround[i-1][j-1].checker == 0 && (j - 1 >= 0) && (i - 1 >= 0)) ||
 					(p->playGround[i+1][j+1].checker == 0 && (j + 1 <= 7) && (i + 1 <= 7)) ||
-					(p->playGround[i+1][j+1].checker == 0 && (j + 1 <= 7) && (i + 1 <= 7)))){
+					(p->playGround[i+1][j-1].checker == 0 && (j - 1 >= 0) && (i + 1 <= 7)))){
 						return true;
 					}
 				}
@@ -419,7 +419,7 @@ bool canMove(PlayGround *p, Player *player){
 					((p->playGround[i-1][j+1].checker == 0 && (j + 1 <= 7) && (i - 1 >= 0)) ||
 					(p->playGround[i-1][j-1].checker == 0 && (j - 1 >= 0) && (i - 1 >= 0)) ||
 					(p->playGround[i+1][j+1].checker == 0 && (j + 1 <= 7) && (i + 1 <= 7)) ||
-					(p->playGround[i+1][j+1].checker == 0 && (j + 1 <= 7) && (i + 1 <= 7)))){
+					(p->playGround[i+1][j-1].checker == 0 && (j - 1 >= 0) && (i + 1 <= 7)))){
 						return true;
 					}
 				}
