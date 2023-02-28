@@ -3,6 +3,7 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/acuti03/checkers?logo=github)
 
 
+![alt text](game.png)
 
 # How to run the game
 
@@ -14,8 +15,6 @@ $ ./game
 ```
 
 # Requirements
-
-**install:**
 
 - make
 - ncurses library
